@@ -1,114 +1,156 @@
 # Real-Time Social Media Analytics for Sentiment and Trend Detection
 
-**Course:** CSI-630 | Govt. Municipal Graduate College, Faisalabad  
-**Tech Stack:** Python · Pandas · VADER · TextBlob · SQLite · Streamlit
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=flat-square&logo=python)
+![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-red?style=flat-square&logo=streamlit)
+![NLP](https://img.shields.io/badge/NLP-VADER%20%7C%20TextBlob-green?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+
+> **Final Year Project** — BS Computer Science, Govt. Municipal Graduate College, Faisalabad (2026)
+
+A modular, end-to-end NLP pipeline that collects social media text, runs dual-engine sentiment analysis (VADER + TextBlob), persists results in SQLite, and displays live insights on an interactive Streamlit dashboard — all with zero API keys required.
 
 ---
 
-## Project Overview
+## Features
 
-This system collects social-media data (from a local CSV dataset), cleans the
-text, classifies each post as **Positive**, **Negative**, or **Neutral** using
-two pre-trained NLP models (VADER and TextBlob), stores the results in a local
-SQLite database, and displays live charts and statistics on an interactive
-Streamlit dashboard.
+- **Dual-engine sentiment analysis** — VADER and TextBlob scores combined into an ensemble label (Positive / Negative / Neutral)
+- **Full NLP preprocessing** — URL removal, mention stripping, stopword filtering, lemmatization, tokenization
+- **Interactive Streamlit dashboard** — pie charts, bar charts, trend lines, word cloud, hashtag frequency, live single-post analyser
+- **Live Reddit data fetching** — via RSS feed (no API key needed)
+- **SQLite persistence** — all results stored locally, queryable across sessions
+- **Comparison module** — benchmark VADER vs TextBlob accuracy side by side
+- **ML model training** — Logistic Regression and Random Forest classifiers trained on processed data
+- **Auto sample generation** — works out of the box with no dataset provided
 
 ---
 
-## Folder Structure
+## Screenshots
+
+> Dashboard preview — run locally with `streamlit run App.py`
+
+*(Add a screenshot here: Dashboard → take screenshot → save as `assets/dashboard.png` → update this line)*
+
+---
+
+## Project Structure
 
 ```
 social_media_analytics/
 │
-├── data/                      ← created automatically
-│   ├── tweets.csv             ← your dataset (or auto-generated sample)
-│   └── analytics.db           ← SQLite database (auto-created)
+├── data/                       ← auto-created at runtime
+│   ├── tweets.csv              ← your dataset (or auto-generated sample)
+│   └── analytics.db            ← SQLite database (auto-created)
 │
-├── data_collection.py         ← Module 1: load dataset
-├── preprocessing.py           ← Module 2: clean & tokenize text
-├── sentiment_analysis.py      ← Module 3: VADER + TextBlob analysis
-├── database.py                ← Module 4: SQLite storage
-├── dashboard.py               ← Module 5: Streamlit dashboard
+├── models/                     ← saved ML model files
 │
-├── requirements.txt           ← Python dependencies
-└── README.md                  ← this file
+├── App.py                      ← main entry point (Streamlit app)
+├── dashboard.py                ← dashboard UI components
+├── comments_analyser.py        ← Reddit RSS comment fetcher & analyser
+├── live_reddit_fetcher.py      ← live Reddit feed via RSS (no API key)
+├── sentiment_analysis.py       ← VADER + TextBlob dual engine
+├── preprocessing.py            ← full NLP preprocessing pipeline
+├── data_collection.py          ← dataset loader + sample generator
+├── database.py                 ← SQLite CRUD operations
+├── ml_models.py                ← Logistic Regression + Random Forest
+├── train_models.py             ← model training script
+├── comparison.py               ← VADER vs TextBlob benchmarking
+├── hashtag_trends.py           ← hashtag extraction and frequency analysis
+├── wordcloud_gen.py            ← word cloud generation
+│
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
 ## Quick Start
 
-### 1. Install dependencies
+### 1. Clone the repo
+```bash
+git clone https://github.com/YOUR_USERNAME/social-media-sentiment-analysis.git
+cd social-media-sentiment-analysis
+```
+
+### 2. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. (Optional) Add your own dataset
-Place a CSV file with a `text` column at `data/tweets.csv`.  
-A free Twitter sentiment dataset is available at:  
-https://www.kaggle.com/datasets/kazanova/sentiment140
-
-If no file is present, the dashboard will offer to generate a **200-row sample dataset** automatically.
-
 ### 3. Launch the dashboard
 ```bash
-streamlit run dashboard.py
+streamlit run App.py
 ```
 
-Your browser will open at `http://localhost:8501`.
+Opens at `http://localhost:8501` — no configuration needed.
 
-### 4. Run the pipeline
-Click **▶ Run Full Analysis Pipeline** in the left sidebar to:
-- Load the dataset
-- Clean and tokenize the text
-- Analyse sentiment with VADER + TextBlob
-- Save results to SQLite
-- Refresh all charts automatically
-
----
-
-## Module Descriptions
-
-| Module | Purpose |
-|--------|---------|
-| `data_collection.py` | Reads the CSV dataset into a Pandas DataFrame; generates sample data if none exists |
-| `preprocessing.py` | Lowercases, removes URLs/mentions/emojis/hashtags/stop-words, and tokenizes each post |
-| `sentiment_analysis.py` | Scores each post with VADER and TextBlob, then combines scores into a final ensemble label |
-| `database.py` | Creates and manages a SQLite database; inserts and queries sentiment records |
-| `dashboard.py` | Streamlit web app with pie/bar/trend charts, a data table, and a live single-post analyser |
-
----
-
-## Testing Individual Modules
-
-Each module can be run standalone:
-
-```bash
-python data_collection.py
-python preprocessing.py
-python sentiment_analysis.py
-python database.py
-```
+### 4. (Optional) Add your own dataset
+Place a CSV with a `text` column at `data/tweets.csv`.  
+Free dataset: [Sentiment140 on Kaggle](https://www.kaggle.com/datasets/kazanova/sentiment140)
 
 ---
 
 ## Pipeline Architecture
 
 ```
-CSV Dataset
-    │
-    ▼
-data_collection.py  ──►  Raw DataFrame
-    │
-    ▼
-preprocessing.py    ──►  Cleaned Text Column
-    │
-    ▼
-sentiment_analysis.py ►  Sentiment Labels + Scores
-    │
-    ▼
-database.py         ──►  SQLite (analytics.db)
-    │
-    ▼
-dashboard.py        ──►  Streamlit Web Dashboard
+CSV Dataset / Reddit RSS Feed
+          │
+          ▼
+  data_collection.py  ──►  Raw DataFrame
+          │
+          ▼
+  preprocessing.py    ──►  Cleaned Text
+          │
+          ▼
+  sentiment_analysis.py ►  VADER + TextBlob Labels
+          │
+          ▼
+  ml_models.py        ──►  LR / RF Classification
+          │
+          ▼
+  database.py         ──►  SQLite Storage
+          │
+          ▼
+  dashboard.py / App.py ►  Streamlit Dashboard
 ```
+
+---
+
+## Module Reference
+
+| Module | Purpose |
+|--------|---------|
+| `App.py` | Main Streamlit entry point |
+| `dashboard.py` | Charts, filters, data table UI |
+| `comments_analyser.py` | Fetch and analyse Reddit comments via RSS |
+| `live_reddit_fetcher.py` | Real-time Reddit post fetching (RSS, no API key) |
+| `sentiment_analysis.py` | Dual-engine VADER + TextBlob scorer |
+| `preprocessing.py` | Full NLP preprocessing pipeline |
+| `data_collection.py` | CSV loader + auto sample generator |
+| `database.py` | SQLite schema, insert, and query |
+| `ml_models.py` | Logistic Regression + Random Forest |
+| `train_models.py` | Standalone model training |
+| `comparison.py` | VADER vs TextBlob accuracy comparison |
+| `hashtag_trends.py` | Hashtag extraction and trend ranking |
+| `wordcloud_gen.py` | Word cloud generation from corpus |
+
+---
+
+## Tech Stack
+
+| Layer | Tools |
+|-------|-------|
+| Language | Python 3.9+ |
+| NLP | VADER, TextBlob, NLTK |
+| ML | Scikit-learn (Logistic Regression, Random Forest) |
+| Data | Pandas, NumPy |
+| Visualisation | Streamlit, Matplotlib, Seaborn, WordCloud |
+| Database | SQLite3 |
+| Data Source | Reddit RSS (no API key required) |
+
+---
+
+## Author
+
+**Muhammad Zarghan**  
+BS Computer Science — Govt. Municipal Graduate College, Faisalabad (2026)  
+[LinkedIn](https://linkedin.com/in/muhammad-zarghan) · [Fiverr](https://www.fiverr.com/m_zarghan)
